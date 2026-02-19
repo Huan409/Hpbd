@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thổi nến bằng mic 🎂</title>
+  <style>
+    :root { --bg:#0f1220; --cake:#ffb7c8; --cream:#fff3f6; }
+    body{
+      margin:0; height:100vh; display:grid; place-items:center;
+      background: radial-gradient(900px 500px at 50% 30%, #1b2140, var(--bg));
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:#e9ecff; user-select:none;
+    }
+    .wrap{ text-align:center; padding:22px; width:min(460px, 94vw); }
+    h1{ margin:0 0 6px; font-size:22px; }
+    p{ margin:0 0 12px; opacity:.85; }
+
+    .scene{ position:relative; width:260px; height:260px; margin:0 auto 10px; }
+    .candle{
+      position:absolute; left:50%; top:48px; transform:translateX(-50%);
+      width:26px; height:72px; border-radius:12px;
+      background: repeating-linear-gradient(45deg, #ffd1dc 0 8px, #fff 8px 16px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    .wick{
+      position:absolute; left:50%; top:-10px; transform:translateX(-50%);
+      width:4px; height:14px; border-radius:2px; background:#2b2b2b;
+    }
+    .flame{
+      position:absolute; left:50%; top:-46px; transform:translateX(-50%);
+      width:28px; height:44px;
+      background: radial-gradient(circle at 30% 30%, #fff6b3 0 28%, #ffb703 40%, #fb5607 68%, transparent 72%);
+      border-radius: 50% 50% 55% 55% / 60% 60% 40% 40%;
+      filter: drop-shadow(0 0 12px rgba(255,180,0,.55));
+      transform-origin: 50% 90%;
+      animation: flicker .12s infinite alternate;
+      transition: opacity .18s ease, transform .18s ease, filter .18s ease;
+    }
+    @keyframes flicker{
+      from { transform: translateX(-50%) rotate(-3deg) scale(1); }
+      to   { transform: translateX(-50%) rotate(3deg)  scale(1.03); }
+    }
+
+    .cake{
+      position:absolute; left:50%; bottom:30px; transform:translateX(-50%);
+      width:220px; height:120px; border-radius:24px;
+      background: linear-gradient(180deg, var(--cream) 0 22%, var(--cake) 22% 100%);
+      box-shadow: 0 18px 45px rgba(0,0,0,.35);
+      overflow:hidden;
+    }
+    .drip{
+      position:absolute; left:0; top:18%;
+      width:100%; height:40%;
+      background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.75));
+      clip-path: polygon(0 0, 100% 0, 100% 55%, 92% 60%, 84% 80%, 74% 58%, 63% 78%, 52% 56%, 41% 75%, 30% 58%, 18% 78%, 10% 60%, 0 55%);
+      opacity:.9;
+    }
+
+    .meter{
+      height:10px; background:rgba(255,255,255,.12); border-radius:999px;
+      overflow:hidden; margin:10px auto 6px; width:260px;
+    }
+    .bar{
+      height:100%; width:0%;
+      background: linear-gradient(90deg, #7dd3fc, #a78bfa, #fb7185);
+      transition: width .06s linear;
+    }
+    .row{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
+    button{
+      border:0; border-radius:12px; padding:10px 12px; cursor:pointer;
+      background: rgba(255,255,255,.10); color:#e9ecff;
+      box-shadow: 0 10px 20px rgba(0,0,0,.25);
+      backdrop-filter: blur(8px);
+      touch-action: manipulation;
+    }
+    button:active{ transform: translateY(1px); }
+    .status{ font-size:13px; opacity:.9; min-height:18px; }
+    .sub{ font-size:12px; opacity:.72; margin-top:8px; line-height:1.35; }
+    .off .flame{ opacity:0; filter:none; transform: translateX(-50%) scale(.85); animation:none; }
+    .pill{
+      display:inline-flex; gap:6px; align-items:center;
+      padding:4px 8px; border-radius:999px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.12);
+      font-size:12px; opacity:.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="wrap">
+    <h1>Thổi nến bằng mic 🎂</h1>
+    <p>Bấm <b>Bật mic</b> rồi thổi vào điện thoại 💨</p>
+
+    <div class="scene">
+      <div class="candle">
+        <div class="wick"></div>
+        <div class="flame" id="flame" title="Thổi vào mic"></div>
+      </div>
+      <div class="cake"><div class="drip"></div></div>
+    </div>
+
+    <div class="meter"><div class="bar" id="bar"></div></div>
+    <div class="status" id="status">Chưa bật mic 🎙️</div>
+
+    <div class="row">
+      <button id="btnMic">Bật mic 🎙️</button>
+      <button id="btnRelight">Châm lại 🔥</button>
+      <button id="btnTouch">Nhấn giữ để thổi (dự phòng) 💨</button>
+    </div>
+
+    <div class="sub">
+      <span class="pill">Sensitivity: <span id="sensText">vừa</span></span>
+      <span class="pill">Noise gate: <span id="gateText">auto</span></span>
+      <div style="margin-top:8px;opacity:.7">
+        Lưu ý: mic chỉ hoạt động trên <b>HTTPS</b>. iPhone: nếu không hỏi quyền mic, hãy kiểm tra Safari Settings → Microphone.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const wrap = document.getElementById('wrap');
+    const bar = document.getElementById('bar');
+    const statusEl = document.getElementById('status');
+    const flame = document.getElementById('flame');
+
+    const sensText = document.getElementById('sensText');
+    const gateText = document.getElementById('gateText');
+
+    let candleOn = true;
+
+    // "blow" là tiến trình tắt nến (0..100)
+    let blow = 0;
+
+    // mic
+    let audioCtx = null;
+    let analyser = null;
+    let micStream = null;
+    let data = null;
+
+    // Một chút smoothing để đỡ giật
+    let smoothLevel = 0;
+
+    // Auto noise gate: đo noise nền lúc đầu
+    let baseline = 0.02;     // fallback
+    let baselineSamples = [];
+    let baselineUntil = 0;   // timestamp ms
+
+    // Điều chỉnh độ nhạy (mobile thường mic nhỏ)
+    // Bạn có thể tăng gainScale nếu thổi mãi không lên.
+    let gainScale = 1.9;   // nhạy vừa
+    sensText.textContent = "vừa";
+
+    function setStatus(t){ statusEl.textContent = t; }
+    function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+
+    function updateUI(){
+      bar.style.width = `${blow}%`;
+      wrap.classList.toggle('off', !candleOn);
+    }
+
+    function turnOff(){
+      candleOn = false;
+      setStatus("Tắt rồi! 🎉 Chúc mừng sinh nhật!");
+      updateUI();
+    }
+
+    function relight(){
+      candleOn = true;
+      blow = 0;
+      setStatus(analyser ? "Mic đang bật 🎙️ — thổi đi!" : "Chưa bật mic 🎙️");
+      updateUI();
+    }
+
+    function computeRMSFromAnalyser(){
+      if (!analyser) return 0;
+
+      analyser.getByteTimeDomainData(data);
+      // data: 0..255, 128 là 0
+      let sum = 0;
+      for (let i = 0; i < data.length; i++){
+        const v = (data[i] - 128) / 128;
+        sum += v * v;
+      }
+      const rms = Math.sqrt(sum / data.length); // ~0..1
+      return rms;
+    }
+
+    function tick(){
+      // level 0..1 từ mic
+      const rms = computeRMSFromAnalyser();
+
+      // smooth
+      smoothLevel = smoothLevel * 0.85 + rms * 0.15;
+
+      // baseline đo noise nền trong 1.2s đầu sau khi bật mic
+      const now = performance.now();
+      if (analyser && now < baselineUntil){
+        baselineSamples.push(smoothLevel);
+        if (baselineSamples.length > 10){
+          // lấy median-ish: sort nhẹ vì ít phần tử
+          const arr = baselineSamples.slice().sort((a,b)=>a-b);
+          baseline = arr[Math.floor(arr.length * 0.7)] || baseline; // 70% quantile
+        }
+      }
+
+      // noise gate: chỉ tính phần vượt baseline
+      let above = Math.max(0, smoothLevel - baseline);
+      // scale để "thổi" nhạy hơn
+      let level = clamp01(above * (12 * gainScale));
+
+      // hiển thị mức thổi (bar) dựa trên tiến trình blow, còn "level" dùng để tăng blow
+      if (candleOn){
+        // nếu level đủ lớn -> tăng tiến trình tắt nhanh
+        if (level > 0.08){
+          blow = Math.min(100, blow + (2.2 + level * 10));
+          setStatus("Đang thổi… 💨");
+        } else {
+          // giảm từ từ nếu ngưng thổi
+          blow = Math.max(0, blow - 1.2);
+          setStatus(analyser ? "Mic đang bật 🎙️ — thổi đi!" : "Chưa bật mic 🎙️");
+        }
+
+        // “gió” làm flame nghiêng nhẹ
+        const tilt = (level * 18).toFixed(2);
+        const scale = (1 - level * 0.18).toFixed(3);
+        flame.style.transform = `translateX(-50%) rotate(${-tilt}deg) scale(${scale})`;
+        flame.style.filter = `drop-shadow(0 0 ${Math.round(12 - level*7)}px rgba(255,180,0,.55))`;
+
+        if (blow >= 100) turnOff();
+      } else {
+        // nến đã tắt: reset style flame về mặc định (ẩn)
+        flame.style.transform = `translateX(-50%)`;
+      }
+
+      updateUI();
+      requestAnimationFrame(tick);
+    }
+
+    async function enableMic(){
+      try{
+        if (!navigator.mediaDevices?.getUserMedia){
+          setStatus("Máy bạn không hỗ trợ mic 😅");
+          return;
+        }
+
+        // iOS/Safari cần AudioContext tạo từ gesture
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        micStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          }
+        });
+
+        const source = audioCtx.createMediaStreamSource(micStream);
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 1024;
+        analyser.smoothingTimeConstant = 0.7;
+        data = new Uint8Array(analyser.fftSize);
+
+        source.connect(analyser);
+
+        // baseline trong 1.2 giây đầu
+        baselineSamples = [];
+        baselineUntil = performance.now() + 1200;
+        gateText.textContent = "auto";
+
+        setStatus("Mic đang bật 🎙️ — thổi đi!");
+      } catch (err){
+        console.error(err);
+        setStatus("Không bật được mic (bị chặn quyền?) 🥲");
+      }
+    }
+
+    // Dự phòng: nhấn giữ để thổi (nếu mic không dùng được)
+    let touchBlowing = false;
+    function touchStart(){
+      if (!candleOn) return;
+      touchBlowing = true;
+      setStatus("Đang thổi… 💨 (dự phòng)");
+    }
+    function touchEnd(){
+      touchBlowing = false;
+      if (candleOn) setStatus(analyser ? "Mic đang bật 🎙️ — thổi đi!" : "Chưa bật mic 🎙️");
+    }
+
+    // touch loop tăng blow nếu đang nhấn giữ
+    function touchTick(){
+      if (touchBlowing && candleOn){
+        blow = Math.min(100, blow + 4.0);
+        if (blow >= 100) turnOff();
+        updateUI();
+      }
+      requestAnimationFrame(touchTick);
+    }
+
+    // Buttons
+    document.getElementById('btnMic').addEventListener('click', async () => {
+      await enableMic();
+
+      // nếu iOS đang suspended, resume
+      if (audioCtx?.state === 'suspended'){
+        try { await audioCtx.resume(); } catch {}
+      }
+    });
+
+    document.getElementById('btnRelight').addEventListener('click', relight);
+
+    const btnTouch = document.getElementById('btnTouch');
+    btnTouch.addEventListener('pointerdown', (e)=>{ e.preventDefault(); touchStart(); });
+    btnTouch.addEventListener('pointerup', (e)=>{ e.preventDefault(); touchEnd(); });
+    btnTouch.addEventListener('pointercancel', touchEnd);
+    btnTouch.addEventListener('pointerleave', touchEnd);
+
+    // Tip: double-tap flame để đổi sensitivity nhanh (vừa -> cao -> thấp)
+    const sensModes = [
+      { name: "thấp", gain: 1.2 },
+      { name: "vừa",  gain: 1.9 },
+      { name: "cao",  gain: 2.7 },
+    ];
+    let sensIdx = 1;
+    flame.addEventListener('dblclick', () => {
+      sensIdx = (sensIdx + 1) % sensModes.length;
+      gainScale = sensModes[sensIdx].gain;
+      sensText.textContent = sensModes[sensIdx].name;
+      setStatus(`Đổi sensitivity: ${sensModes[sensIdx].name} ✅`);
+      setTimeout(()=>{ if (candleOn) setStatus(analyser ? "Mic đang bật 🎙️ — thổi đi!" : "Chưa bật mic 🎙️"); }, 700);
+    });
+
+    updateUI();
+    tick();
+    touchTick();
+
+    // cleanup (không bắt buộc)
+    window.addEventListener('pagehide', () => {
+      try{
+        micStream?.getTracks?.().forEach(t => t.stop());
+        audioCtx?.close?.();
+      }catch{}
+    });
+  </script>
+</body>
+</html>
