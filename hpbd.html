@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday Lụa 💖</title>
+  <style>
+    :root{
+      --bg1:#ff9a9e;
+      --bg2:#fad0c4;
+      --bg3:#fbc2eb;
+      --glass: rgba(255,255,255,.14);
+      --glass2: rgba(255,255,255,.08);
+      --txt: rgba(255,255,255,.95);
+      --shadow: 0 18px 60px rgba(0,0,0,.18);
+      --accent: #ff4e8b;
+      --accent2:#ffd1dc;
+      --ok:#7CFFB2;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      height:100vh;
+      overflow:hidden;
+      color:var(--txt);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(255,255,255,.25), transparent 55%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+    }
+
+    /* nền sao lấp lánh */
+    .stars, .stars::before, .stars::after{
+      position:absolute; inset:0;
+      background-image:
+        radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.9), transparent 55%),
+        radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,.75), transparent 55%),
+        radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.7), transparent 55%),
+        radial-gradient(2px 2px at 70% 75%, rgba(255,255,255,.85), transparent 55%),
+        radial-gradient(1px 1px at 55% 45%, rgba(255,255,255,.65), transparent 55%);
+      opacity:.55;
+      filter: blur(.2px);
+      animation: twinkle 4.5s ease-in-out infinite;
+      pointer-events:none;
+      content:"";
+    }
+    .stars::before{ opacity:.4; transform: scale(1.2); animation-duration: 6.5s; }
+    .stars::after{ opacity:.25; transform: scale(.95); animation-duration: 8s; }
+
+    @keyframes twinkle{
+      0%,100%{ opacity:.35; }
+      50%{ opacity:.75; }
+    }
+
+    /* layout */
+    .stage{
+      position:relative;
+      height:100%;
+      display:grid;
+      place-items:center;
+      padding:24px;
+    }
+
+    .card{
+      width:min(880px, 94vw);
+      border-radius:28px;
+      background: linear-gradient(180deg, var(--glass), var(--glass2));
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.22);
+      padding:28px 24px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      background: rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.18);
+      font-size:14px;
+      letter-spacing:.2px;
+    }
+
+    .dot{
+      width:10px; height:10px; border-radius:50%;
+      background: var(--ok);
+      box-shadow: 0 0 18px rgba(124,255,178,.65);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{ transform:scale(1); opacity:.9;}
+      50%{ transform:scale(1.35); opacity:.55;}
+    }
+
+    .progress{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .pill{
+      width:38px; height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.16);
+      overflow:hidden;
+    }
+    .pill > i{
+      display:block; height:100%; width:0%;
+      background: rgba(255,255,255,.75);
+      border-radius:999px;
+      transition: width .6s ease;
+    }
+
+    .title{
+      font-size: clamp(32px, 4.2vw, 52px);
+      line-height:1.05;
+      margin:10px 0 8px;
+      text-shadow: 0 10px 28px rgba(0,0,0,.18);
+    }
+    .subtitle{
+      margin:0 0 18px;
+      font-size: clamp(16px, 2.1vw, 20px);
+      opacity:.92;
+    }
+
+    .divider{
+      height:1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+      margin: 18px 0;
+    }
+
+    .content{
+      font-size: clamp(16px, 2vw, 20px);
+      line-height:1.75;
+      max-width: 70ch;
+    }
+
+    .type{
+      min-height: 8.5em;
+      white-space: pre-wrap;
+    }
+    .caret{
+      display:inline-block;
+      width:10px;
+      margin-left:2px;
+      border-right:2px solid rgba(255,255,255,.9);
+      animation: blink .8s steps(1) infinite;
+      transform: translateY(2px);
+    }
+    @keyframes blink{ 50%{ opacity:0; } }
+
+    .actions{
+      margin-top:18px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+      padding:12px 18px;
+      border-radius:14px;
+      font-size:16px;
+      font-weight:600;
+      transition: transform .15s ease, filter .2s ease, background .25s ease;
+      color: rgba(255,255,255,.96);
+      background: rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.20);
+      backdrop-filter: blur(8px);
+    }
+    button:hover{ transform: translateY(-2px); filter: brightness(1.06); }
+    button:active{ transform: translateY(0px) scale(.98); }
+
+    .primary{
+      background: linear-gradient(135deg, rgba(255,78,139,.95), rgba(255,20,147,.75));
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: 0 14px 30px rgba(255,78,139,.25);
+    }
+    .ghost{
+      background: rgba(255,255,255,.10);
+    }
+
+    /* Scenes */
+    .scene{
+      position:absolute;
+      inset:0;
+      padding:24px;
+      display:grid;
+      place-items:center;
+      opacity:0;
+      transform: translateY(22px) scale(.98);
+      pointer-events:none;
+      transition: opacity .8s ease, transform .8s cubic-bezier(.2,.9,.2,1);
+    }
+    .scene.active{
+      opacity:1;
+      transform: translateY(0) scale(1);
+      pointer-events:auto;
+    }
+
+    /* Chuyển cảnh “độc đáo”: wipe + zoom */
+    .wipe{
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 55%),
+                  linear-gradient(135deg, rgba(255,78,139,.65), rgba(251,194,235,.25));
+      transform: translateX(-120%) rotate(8deg);
+      transition: transform .9s cubic-bezier(.2,.9,.2,1);
+      filter: blur(0px);
+      opacity:.85;
+      pointer-events:none;
+    }
+    .wipe.go{ transform: translateX(120%) rotate(8deg); }
+
+    /* Hearts */
+    .heart{
+      position:absolute;
+      left:0;
+      top:0;
+      pointer-events:none;
+      will-change: transform, opacity;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.15));
+      opacity:.95;
+      animation: floatUp linear forwards;
+    }
+    @keyframes floatUp{
+      0%{ transform: translate(var(--x), 110vh) scale(var(--s)); opacity:0; }
+      10%{ opacity:1; }
+      100%{ transform: translate(calc(var(--x) + var(--drift)), -14vh) scale(calc(var(--s) * 1.35)); opacity:0; }
+    }
+
+    /* Confetti canvas */
+    canvas#confetti{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+    }
+
+    /* Wish mode glow */
+    .wish{
+      position:absolute;
+      inset:0;
+      opacity:0;
+      pointer-events:none;
+      background:
+        radial-gradient(600px 400px at 50% 45%, rgba(255,255,255,.32), transparent 60%),
+        radial-gradient(900px 600px at 30% 80%, rgba(255,78,139,.22), transparent 62%),
+        radial-gradient(900px 600px at 80% 30%, rgba(251,194,235,.18), transparent 62%);
+      transition: opacity .8s ease;
+      mix-blend-mode: screen;
+    }
+    .wish.on{ opacity:1; }
+
+    /* small footer */
+    .footer{
+      margin-top:14px;
+      font-size: 13px;
+      opacity:.85;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stars"></div>
+  <canvas id="confetti"></canvas>
+
+  <div class="stage">
+    <div class="wipe" id="wipe"></div>
+    <div class="wish" id="wish"></div>
+
+    <!-- Scene 1 -->
+    <section class="scene active" id="s1">
+      <div class="card">
+        <div class="header">
+          <div class="badge"><span class="dot"></span> Chế độ: Happy Birthday</div>
+          <div class="progress" aria-label="progress">
+            <span class="pill"><i id="p1"></i></span>
+            <span class="pill"><i id="p2"></i></span>
+            <span class="pill"><i id="p3"></i></span>
+          </div>
+        </div>
+
+        <h1 class="title">🎉 Chúc mừng sinh nhật, Lụa! 💖</h1>
+        <p class="subtitle">Hôm nay là ngày “đặc biệt” của một cô gái rất dịu dàng.</p>
+
+        <div class="divider"></div>
+
+        <div class="content">
+          <div class="type" id="type1"></div><span class="caret"></span>
+          <div class="actions">
+            <button class="primary" id="btn1">Bắt đầu hành trình ✨</button>
+            <button class="ghost" id="spark1">Thả tim trước đã 💗</button>
+          </div>
+          <div class="footer">Hehe: bấm “Thả tim” vài lần cho vui nhé 😄</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 2 -->
+    <section class="scene" id="s2">
+      <div class="card">
+        <div class="header">
+          <div class="badge">🌸 Lời chúc dành riêng cho Lụa</div>
+          <div class="progress">
+            <span class="pill"><i id="pp1"></i></span>
+            <span class="pill"><i id="pp2"></i></span>
+            <span class="pill"><i id="pp3"></i></span>
+          </div>
+        </div>
+
+        <h1 class="title">Lụa ơi, tuổi mới…</h1>
+        <p class="subtitle">…Anh chúc mọi thứ đến với em theo cách thật nhẹ nhàng.</p>
+
+        <div class="divider"></div>
+
+        <div class="content">
+          <div class="type" id="type2"></div><span class="caret"></span>
+          <div class="actions">
+            <button class="primary" id="btn2">Chuyển cảnh “độc đáo” 🎬</button>
+            <button class="ghost" id="spark2">Thêm tí lung linh nào ✨</button>
+          </div>
+          <div class="footer">Cảnh tiếp theo có “Wish mode” — bật lên là thấy khác liền.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 3 -->
+    <section class="scene" id="s3">
+      <div class="card">
+        <div class="header">
+          <div class="badge">🎂 Wish Mode</div>
+          <div class="progress">
+            <span class="pill"><i id="ppp1"></i></span>
+            <span class="pill"><i id="ppp2"></i></span>
+            <span class="pill"><i id="ppp3"></i></span>
+          </div>
+        </div>
+
+        <h1 class="title">Ước một điều nha, Lụa ✨</h1>
+        <p class="subtitle">Rồi bấm nút để “đóng dấu” điều ước.</p>
+
+        <div class="divider"></div>
+
+        <div class="content">
+          <div class="type" id="type3"></div><span class="caret"></span>
+          <div class="actions">
+            <button class="primary" id="wishBtn">Bật Wish Mode 🌟</button>
+            <button class="ghost" id="finalBtn">Gửi lời chúc 💌</button>
+          </div>
+          <div class="footer">                  Design by Khắc Huấn ✅</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+<script>
+  // ===== Helpers =====
+  const $ = (id) => document.getElementById(id);
+
+  const scenes = [ $("s1"), $("s2"), $("s3") ];
+  const wipe = $("wipe");
+  const wishLayer = $("wish");
+
+  function setProgress(step){
+    // step: 1..3
+    const bars = [
+      [$("p1"), $("p2"), $("p3")],
+      [$("pp1"), $("pp2"), $("pp3")],
+      [$("ppp1"), $("ppp2"), $("ppp3")]
+    ];
+    bars.forEach(group=>{
+      group.forEach((el, idx)=>{
+        if(!el) return;
+        el.style.width = idx < step ? "100%" : "0%";
+        el.style.opacity = idx < step ? "1" : ".65";
+      });
+    });
+  }
+
+  function goTo(index){
+    // wipe transition
+    wipe.classList.remove("go");
+    // trigger reflow
+    void wipe.offsetWidth;
+    wipe.classList.add("go");
+
+    scenes.forEach((s,i)=> s.classList.toggle("active", i===index));
+    setProgress(index+1);
+
+    // reset wish layer when not in last scene
+    if(index !== 2) wishLayer.classList.remove("on");
+  }
+
+  // ===== Typewriter =====
+  async function typewrite(el, text, speed=22){
+    el.textContent = "";
+    for(let i=0;i<text.length;i++){
+      el.textContent += text[i];
+      await new Promise(r => setTimeout(r, speed));
+    }
+  }
+
+  // ===== Hearts =====
+  let heartInterval = null;
+  function burstHearts(count=14){
+    for(let i=0;i<count;i++) spawnHeart();
+  }
+
+  function spawnHeart(){
+    const h = document.createElement("div");
+    h.className = "heart";
+    const hearts = ["💖","💗","💘","💝","💞","🌸","✨"];
+    h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+    const x = Math.random()*100;          // vw
+    const s = 0.7 + Math.random()*1.2;    // scale
+    const drift = (-25 + Math.random()*50); // vw drift
+    const dur = 3200 + Math.random()*2200;
+
+    h.style.setProperty("--x", x + "vw");
+    h.style.setProperty("--s", s);
+    h.style.setProperty("--drift", drift + "vw");
+    h.style.animationDuration = dur + "ms";
+    h.style.fontSize = (16 + Math.random()*18) + "px";
+    document.body.appendChild(h);
+
+    setTimeout(()=> h.remove(), dur+200);
+  }
+
+  function toggleHearts(on){
+    if(on){
+      if(heartInterval) return;
+      heartInterval = setInterval(()=>spawnHeart(), 220);
+    }else{
+      clearInterval(heartInterval);
+      heartInterval = null;
+    }
+  }
+
+  // ===== Confetti (canvas) =====
+  const canvas = $("confetti");
+  const ctx = canvas.getContext("2d");
+  let W,H, confs=[], confOn=false;
+
+  function resize(){
+    W = canvas.width = window.innerWidth * devicePixelRatio;
+    H = canvas.height = window.innerHeight * devicePixelRatio;
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  function confettiBurst(n=120){
+    confOn = true;
+    const now = Date.now();
+    for(let i=0;i<n;i++){
+      confs.push({
+        x: Math.random()*W,
+        y: -20*devicePixelRatio,
+        vx: (-2 + Math.random()*4) * devicePixelRatio,
+        vy: (2 + Math.random()*5) * devicePixelRatio,
+        r: (2 + Math.random()*4) * devicePixelRatio,
+        rot: Math.random()*Math.PI,
+        vr: (-0.2 + Math.random()*0.4),
+        life: now + (1800 + Math.random()*1400)
+      });
+    }
+  }
+
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    const t = Date.now();
+    confs = confs.filter(p => p.life > t && p.y < H + 40*devicePixelRatio);
+
+    for(const p of confs){
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.04*devicePixelRatio;
+      p.rot += p.vr;
+
+      // màu ngẫu nhiên theo vị trí (không cần set cố định)
+      const hue = (p.x/W)*360;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = `hsla(${hue}, 90%, 70%, .95)`;
+      ctx.fillRect(-p.r, -p.r, p.r*2.2, p.r*1.1);
+      ctx.restore();
+    }
+
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  // ===== Content =====
+  const t1 =
+`Lụa à…
+Hôm nay anh không chỉ chúc “sinh nhật vui vẻ” đâu.
+Anh muốn chúc Lụa bước sang một tuổi mới:
+• nhẹ nhàng hơn với bản thân
+• rực rỡ hơn với ước mơ
+• và bình yên hơn trong những điều nhỏ xíu 💗`;
+
+  const t2 =
+`Chúc Lụa luôn giữ được sự mềm mại như chính cái tên của mình,
+nhưng cũng đủ mạnh mẽ để không điều gì làm Lụa gục xuống.
+
+Tuổi mới mong Lụa:
+🌸 gặp đúng người, đúng việc, đúng thời điểm
+✨ có thêm nhiều khoảnh khắc đáng nhớ
+💖 và mỗi lần nhìn lại đều thấy “mình đã sống rất đẹp”.`;
+
+  const t3 =
+`Giờ thì… nhắm mắt 3 giây, nghĩ về một điều Lụa thật sự muốn.
+
+1…
+2…
+3…
+
+Khi sẵn sàng, bấm “Bật Wish Mode”.
+Anh sẽ thả cả bầu trời lung linh cho điều ước của Lụa ✨`;
+
+  // ===== Init =====
+  setProgress(1);
+  typewrite($("type1"), t1, 18);
+
+  // Scene 1 actions
+  $("spark1").addEventListener("click", ()=> burstHearts(18));
+  $("btn1").addEventListener("click", async ()=>{
+    confettiBurst(140);
+    burstHearts(20);
+    goTo(1);
+    await typewrite($("type2"), t2, 18);
+  });
+
+  // Scene 2 actions
+  $("spark2").addEventListener("click", ()=>{
+    confettiBurst(80);
+    toggleHearts(true);
+    setTimeout(()=>toggleHearts(false), 1600);
+  });
+
+  $("btn2").addEventListener("click", async ()=>{
+    // transition độc đáo + nhịp
+    confettiBurst(160);
+    toggleHearts(true);
+    setTimeout(()=>toggleHearts(false), 1800);
+
+    goTo(2);
+    await typewrite($("type3"), t3, 18);
+  });
+
+  // Scene 3 actions
+  $("wishBtn").addEventListener("click", ()=>{
+    wishLayer.classList.toggle("on");
+    confettiBurst(220);
+    toggleHearts(true);
+    setTimeout(()=>toggleHearts(false), 2400);
+  });
+
+  $("finalBtn").addEventListener("click", ()=>{
+    confettiBurst(240);
+    burstHearts(28);
+    const msg =
+`💌 Gửi Lụa:
+Chúc em một tuổi mới thật nhiều yêu thương.
+Mọi điều em mong sẽ đến theo cách dịu dàng nhất.
+Sinh nhật vui vẻ nhé, Lụa! 💖`;
+    alert(msg);
+  });
+</script>
+</body>
+</html>
